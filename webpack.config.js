@@ -4,12 +4,22 @@ const HTMLWebpackPlugin = require('html-webpack-plugin');
 const copyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
+const isProd = process.env.NODE_ENV === 'production'
+const isDev = !isProd
+console.log('IS PROD', isProd)
+console.log('IS DEV', isDev)
+
+
+function filename(ext){
+    return isDev ? `bundle.${ext}`:`bundle.[fullhash].${ext}`
+}
+
 module.exports={
     context: path.resolve(__dirname,'src'),//где лежат исходники нашего приложения
     mode: 'development',
-    entry:'./index.js',
+    entry:['@babel/polyfill','./index.js'],
     output:{
-        filename:'bundle.[hash].js',
+        filename:filename("js"),
         path:path.resolve(__dirname,"dist")
     },
     resolve:{
@@ -19,18 +29,51 @@ module.exports={
             '@core':path.resolve(__dirname,'src/core'),    
         }
     },
+    devtool: isDev ? 'source-map' : false,
+    devServer:{
+        port:3001,
+        hot:isDev,
+    },
     plugins:[
        new CleanWebpackPlugin(),
        new HTMLWebpackPlugin({
-           template:'index.html'
+           template:'index.html',
+           minify:{
+               removeComments:isProd,
+               collapseWhitespace:isProd
+           }
        }),
-       new copyWebpackPlugin([
+       new copyWebpackPlugin({
+           patterns:[
             { from: path.resolve(__dirname,'src/favicon.ico'), 
             to: path.resolve(__dirname,'dist')},
-       ]),
+           ],
+        }),
        new MiniCssExtractPlugin({
-           filename:'bundle.[hash].css'
+           filename:filename("css"),
        }),
-    ]
+    ],
+    module:{
+        rules: [
+            {
+              test: /\.s[ac]ss$/i,
+              use: [
+                MiniCssExtractPlugin.loader,
+                "css-loader",
+                "sass-loader",
+              ],
+            },
+            {
+                test: /\.m?js$/,
+                exclude: /node_modules/,
+                use: {
+                  loader: "babel-loader",
+                  options: {
+                    presets: ['@babel/preset-env']
+                  }
+                }
+              }
+          ],
+    }
 
 }
