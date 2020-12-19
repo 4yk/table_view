@@ -1,0 +1,31 @@
+{
+  "name": "excel",
+  "version": "1.0.0",
+  "description": "небольшая табличка на js",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start":"webpack",
+    "build":"webpack --mode production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/4yk/table_view.git"
+  },
+  "keywords": [
+    "js",
+    "javascript",
+    "excel"
+  ],
+  "author": "4yk <4ykalex@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/4yk/table_view/issues"
+  },
+  "homepage": "https://github.com/4yk/table_view#readme",
+  "private": true,
+  "devDependencies": {
+    "webpack": "^5.11.0",
+    "webpack-cli": "^4.2.0"
+  }
+}
