@@ -14,6 +14,19 @@ function filename(ext){
     return isDev ? `bundle.${ext}`:`bundle.[fullhash].${ext}`
 }
 
+function jsLoaders(){
+    const loader=[
+        {
+            loader: "babel-loader",
+            options: {
+              presets: ['@babel/preset-env']
+            }
+          }
+    ]
+    if(isDev){
+        loader.push('eslint-loader')
+    }
+}
 module.exports={
     context: path.resolve(__dirname,'src'),//где лежат исходники нашего приложения
     mode: 'development',
@@ -66,12 +79,7 @@ module.exports={
             {
                 test: /\.m?js$/,
                 exclude: /node_modules/,
-                use: {
-                  loader: "babel-loader",
-                  options: {
-                    presets: ['@babel/preset-env']
-                  }
-                }
+                use: jsLoaders() 
               }
           ],
     }
